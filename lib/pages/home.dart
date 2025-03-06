@@ -10,13 +10,20 @@ class HomePage extends StatelessWidget {
         title: Text(
           'Home Page',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 18,
             fontWeight: FontWeight.bold
           ),
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
+        leading: Container(
+            margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(10)
+          ),
+        ),
       )
     );
   }
