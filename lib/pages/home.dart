@@ -17,14 +17,7 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: Colors.grey[700],
         centerTitle: true,
-        leading: Container(
-            margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(10)
-          ),
-        ),
-      )
+      ),
     );
   }
 }
