@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "/home/consigirl/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/mnt/c/Users/dmald/OneDrive/Desktop/Software Engineering/fitness-app/android/app/.cxx/Debug/36736t3j/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/mnt/c/Users/dmald/OneDrive/Desktop/Software Engineering/fitness-app/android/app/.cxx/Debug/36736t3j/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {},
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/ndk/26.3.11579264/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/ndk/26.3.11579264/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": []
+}

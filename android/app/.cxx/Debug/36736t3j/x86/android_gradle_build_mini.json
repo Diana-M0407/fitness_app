@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/consigirl/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/mnt/c/Users/dmald/OneDrive/Desktop/Software Engineering/fitness-app/android/app/.cxx/Debug/36736t3j/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/mnt/c/Users/dmald/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/mnt/c/Users/dmald/OneDrive/Desktop/Software Engineering/fitness-app/android/app/.cxx/Debug/36736t3j/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
