@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -19,8 +20,13 @@ class ProfilePage extends StatelessWidget {
         centerTitle: true,
         leading: Container(
           margin: EdgeInsets.all(10),
+          alignment: Alignment.center,
+          child: SvgPicture.asset('assets/icons/Arrow_back.svg',
+          height: 20,
+          width: 20,
+          ),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Colors.grey[700],
             borderRadius: BorderRadius.circular(10)
           ),
         ),
