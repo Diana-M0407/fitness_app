@@ -6,18 +6,18 @@ class WorkoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Workout',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold
-          ),
-        ),
-        backgroundColor: Colors.grey[700],
-        centerTitle: true,
-      )
+   //   appBar: AppBar(
+   //     title: Text(
+   //       'Workout',
+   //       style: TextStyle(
+   //         color: Colors.black,
+   //         fontSize: 18,
+   //         fontWeight: FontWeight.bold
+   //       ),
+   //     ),
+   //     backgroundColor: Colors.grey[700],
+   //     centerTitle: true,
+   //   )
     );
   }
 }
