@@ -1,0 +1,1 @@
+C:\dev\fitness_app_current\build\app\intermediates\cxx\Debug\2z3o6n2o\obj\arm64-v8a

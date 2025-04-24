@@ -11,8 +11,8 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Profile demoProfile = Profile(
       name: "Diana", 
-      age: 30, 
-      email: "dmal@gmail.com",
+      age: 99, 
+      email: "test@example.com",
     );   
 
     return Scaffold(

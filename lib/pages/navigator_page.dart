@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/pages/workout.dart';
-import 'package:fitnessapp/pages/calendar.dart';
-import 'package:fitnessapp/pages/profile.dart';
-import 'package:fitnessapp/pages/home.dart';
+import 'package:fitnessapp/pages/calendar_page.dart';
+import 'package:fitnessapp/pages/profile_page.dart';
+import 'package:fitnessapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:fitnessapp/theme/theme_provider.dart';
 import 'package:fitnessapp/widgets/app_icon.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigatorPage extends StatefulWidget {
   const NavigatorPage({super.key});
@@ -191,6 +194,24 @@ class _NavigatorPageState extends State<NavigatorPage> {
               },
             ),
             const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Log Out'),
+              onTap: () async {
+                // Firebase sign out
+                await FirebaseAuth.instance.signOut();
+
+                // Clear login state
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('isLoggedIn', false);
+
+                // Navigate back to login
+                if (context.mounted) {
+                  Navigator.pushReplacementNamed(context, '/');
+                }
+              },
+            ),
+
             SwitchListTile(
               secondary: const Icon(Icons.dark_mode),
               title: const Text("Dark Mode"),

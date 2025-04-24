@@ -1,47 +1,67 @@
-import 'package:fitnessapp/pages/calendar.dart';
-import 'package:fitnessapp/pages/home.dart';
-import 'package:fitnessapp/pages/navigator_page.dart';
-import 'package:fitnessapp/pages/profile.dart';
-import 'package:fitnessapp/pages/workout.dart';
+//import 'package:fitnessapp/pages/calendar.dart';
+//import 'package:fitnessapp/pages/home.dart';
+//import 'package:fitnessapp/pages/navigator_page.dart';
+//import 'package:fitnessapp/pages/profile.dart';
+//import 'package:fitnessapp/pages/workout.dart';
+//import 'package:fitnessapp/pages/login_page.dart';
 
 import 'package:fitnessapp/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 //import 'theme/theme_provider.dart';
-//import 'pages/navigator_page.dart';
+import 'pages/navigator_page.dart';
+import 'pages/home_page.dart';
+import 'pages/workout.dart';
+import 'pages/calendar_page.dart';
+import 'pages/profile_page.dart';
+import 'pages/login_page.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Firebase setup
+  //newMethod();
 
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ??
+      false; // ← Change this later with real auth logic
 
-void main() {
-  newMethod();
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: FitnessApp(isLoggedIn: isLoggedIn),
+    ),
+  );
 }
 
-void newMethod() {
-  return runApp(
-  ChangeNotifierProvider(
-    //create: (context) => ThemeProvider(),
-    create:(_) => ThemeProvider(),
-    //child: const MyApp(),
-    child: const FitnessApp(),
-  ),
-);
-}
+//void newMethod() {
+//  return runApp(
+//    ChangeNotifierProvider(
+//      //create: (context) => ThemeProvider(),
+//      create: (_) => ThemeProvider(),
+//      //child: const MyApp(),
+//      child: FitnessApp(isLoggenIn: null),
+//    ),
+//  );
+//}
 
 class FitnessApp extends StatelessWidget {
-  const FitnessApp({super.key});
+  final bool isLoggedIn;
+  const FitnessApp({super.key, required this.isLoggedIn});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-    
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fitness App',
-      //theme: Provider.of<ThemeProvider>(context).themeData,
       theme: themeProvider.themeData,
-      home: const NavigatorPage(),
+      //home: const NavigatorPage(),
+      home: isLoggedIn ? const NavigatorPage() : LoginPage(),
       routes: {
         '/navigator': (context) => const NavigatorPage(),
         '/home': (context) => const HomePage(),
