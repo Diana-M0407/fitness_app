@@ -201,19 +201,37 @@ class _NavigatorPageState extends State<NavigatorPage> {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (context) => const Center(child: CircularProgressIndicator()),
-              );
+                  builder: (_) => const Dialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 16),
+                          Text(
+                            "Logging you out...",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                     ),
+                    ),
+                   );
 
+              // Sign out
               try {
                 await FirebaseAuth.instance.signOut();
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('isLoggedIn', false);
 
-                // Give spinner a short moment before navigating
+                // Give spinner a short moment: bried pause for smoother UX 
                 await Future.delayed(const Duration(milliseconds: 500));
 
                 if (context.mounted) {
-                  Navigator.of(context).pop(); // Remove spinner
+                  Navigator.of(context).pop(); // close spinner dialog
                   Navigator.pushReplacementNamed(context, '/');
                 }
               } catch (e) {
