@@ -198,20 +198,32 @@ class _NavigatorPageState extends State<NavigatorPage> {
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
               onTap: () async {
-                // Firebase sign out
-                await FirebaseAuth.instance.signOut();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(child: CircularProgressIndicator()),
+              );
 
-                // Clear login state
+              try {
+                await FirebaseAuth.instance.signOut();
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('isLoggedIn', false);
 
-                // Navigate back to login
+                // Give spinner a short moment before navigating
+                await Future.delayed(const Duration(milliseconds: 500));
+
                 if (context.mounted) {
+                  Navigator.of(context).pop(); // Remove spinner
                   Navigator.pushReplacementNamed(context, '/');
                 }
-              },
+              } catch (e) {
+                Navigator.of(context).pop(); // Remove spinner
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Logout failed')),
+                );
+               }
+              }
             ),
-
             SwitchListTile(
               secondary: const Icon(Icons.dark_mode),
               title: const Text("Dark Mode"),
