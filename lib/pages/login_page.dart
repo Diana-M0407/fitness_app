@@ -113,6 +113,15 @@ class _LoginPageState extends State<LoginPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
 
+      final displayName = prefs.getString('displayName') ?? 'User'; // fetch saved name
+
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => NavigatorPage(name: displayName)),
+        );
+      }
+      
       // Navigate to the main page on successful login
       Navigator.pushReplacement(
         context, 

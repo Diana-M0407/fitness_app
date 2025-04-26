@@ -12,7 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigatorPage extends StatefulWidget {
-  const NavigatorPage({super.key});
+  final String? name; //Nullable to avoid issues when coming from login
+  const NavigatorPage({super.key, this.name});
 
   @override
   State<NavigatorPage> createState() => _NavigatorPageState();
@@ -87,6 +88,27 @@ class _NavigatorPageState extends State<NavigatorPage> {
 //   );
 // }
 //
+  
+  String _generateGreeting() {
+    final hour = DateTime.now().hour;
+    String greeting;
+
+    if (hour < 12) {
+      greeting = 'Good morning';
+    } else if (hour < 18) {
+      greeting = 'Good afternoon';
+    } else {
+      greeting = 'Good evening';
+    }
+
+      if (widget.name != null && widget.name!.isNotEmpty) {
+      return '$greeting, ${widget.name}!';
+    } else {
+      return '$greeting!';
+    }
+  }
+
+
   CupertinoSwitch newMethod(BuildContext context) {
     return CupertinoSwitch(
       value: Provider.of<ThemeProvider>(context).isDarkMode,
@@ -114,7 +136,21 @@ class _NavigatorPageState extends State<NavigatorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _titles[_selectedIndex],
+              style: const TextStyle(fontSize: 18),
+        ),
+        if (widget.name != null) // Only show greeting if name is passed
+          Text(
+            //'Welcome, ${widget.name}!',
+            _generateGreeting(),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+        ),
+       ],
+      ),
         centerTitle: true,
         backgroundColor: Colors.grey[700],
         //     leading: Builder(

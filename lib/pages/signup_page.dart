@@ -39,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => NavigatorPageWithGreeting(name: _name),
+            builder: (_) => NavigatorPage(name: _name),
           ),
         );
       }
