@@ -12,7 +12,9 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '', _password = '', _error = '';
+  String _name = '', _email = '', _password = '', _error = '';
+  int _age = 0;
+  double _weight = 0.0;
   bool _loading = false;
 
   Future<void> _signUp() async {
@@ -22,25 +24,27 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() => _loading = true);
 
     try {
-      // Create the user
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _email,
         password: _password,
       );
 
-      // Save login state
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('displayName', _name);
+      await prefs.setInt('age', _age);
+      await prefs.setDouble('weight', _weight);
 
-      // Navigate to main app screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const NavigatorPage()),
-      );
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => NavigatorPageWithGreeting(name: _name),
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       setState(() => _error = e.message ?? 'Sign-up failed');
-    } catch (e) {
-      setState(() => _error = 'Unexpected error occurred');
     } finally {
       setState(() => _loading = false);
     }
@@ -58,9 +62,39 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               children: [
                 TextFormField(
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your name' : null,
+                  onSaved: (value) => _name = value!.trim(),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Age'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final age = int.tryParse(value ?? '');
+                    return (age == null || age <= 0) ? 'Enter a valid age' : null;
+                  },
+                  onSaved: (value) => _age = int.parse(value!),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Weight (lbs)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    final weight = double.tryParse(value ?? '');
+                    return (weight == null || weight <= 0)
+                        ? 'Enter a valid weight'
+                        : null;
+                  },
+                  onSaved: (value) => _weight = double.parse(value!),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
                   decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) => value!.isEmpty ? 'Enter an email' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter an email' : null,
                   onSaved: (value) => _email = value!.trim(),
                 ),
                 const SizedBox(height: 16),
@@ -90,3 +124,19 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+
+class NavigatorPageWithGreeting extends StatelessWidget {
+  final String name;
+  const NavigatorPageWithGreeting({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Welcome, $name! Ready to work out?')),
+      );
+    });
+    return const NavigatorPage();
+  }
+}
+

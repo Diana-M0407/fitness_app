@@ -270,3 +270,4 @@ class _NavigatorPageState extends State<NavigatorPage> {
     );
   }
 }
+
