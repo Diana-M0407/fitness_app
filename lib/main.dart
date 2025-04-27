@@ -27,11 +27,12 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.getBool('isLoggedIn') ??
       false; // ← Change this later with real auth logic
+  final displayName = prefs.getString('displayName') ?? '';
 
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
-      child: FitnessApp(isLoggedIn: isLoggedIn),
+      child: FitnessApp(isLoggedIn: isLoggedIn, name: displayName),
     ),
   );
 }
@@ -49,7 +50,8 @@ void main() async {
 
 class FitnessApp extends StatelessWidget {
   final bool isLoggedIn;
-  const FitnessApp({super.key, required this.isLoggedIn});
+  final String name;
+  const FitnessApp({super.key, required this.isLoggedIn, required this.name});
 
   // This widget is the root of your application.
   @override
@@ -61,9 +63,11 @@ class FitnessApp extends StatelessWidget {
       title: 'Fitness App',
       theme: themeProvider.themeData,
       //home: const NavigatorPage(),
-      home: isLoggedIn ? const NavigatorPage() : LoginPage(),
+      home: isLoggedIn 
+        ? NavigatorPage(name: name) // pass the name here
+        : LoginPage(),
       routes: {
-        '/navigator': (context) => const NavigatorPage(),
+        '/navigator': (context) => NavigatorPage(name: name),
         '/home': (context) => const HomePage(),
         '/workout': (context) => const WorkoutPage(),
         '/calendar': (context) => const CalendarPage(),

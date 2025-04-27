@@ -1,3 +1,4 @@
+import 'package:fitnessapp/pages/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/pages/workout.dart';
@@ -27,67 +28,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
       _selectedIndex = index;
     });
   }
-
-// final List _pages = [
-//   const HomePage(),
-//   const WorkoutPage(),
-//   const CalendarPage(),
-//   const ProfilePage(),
-// ];
-//
-// final List<String> _titles = [
-//   'Home',
-//   'Workout',
-//   'Calendar',
-//   'Profile',
-// ];
-//
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     //appBar: AppBar(title: Text('Welcome!')),
-//     appBar: AppBar(title:  Text(_titles[_selectedIndex])),
-//     // drawer with theme switch
-//     drawer: Drawer(
-//       backgroundColor: Theme.of(context).colorScheme.surface,
-//       child: Center(
-//         child: newMethod(context),
-//       ),
-//     ),
-//     body: _pages[_selectedIndex],
-//     bottomNavigationBar: BottomNavigationBar(
-//       type : BottomNavigationBarType.fixed,
-//       currentIndex: _selectedIndex,
-//       onTap: _navigateBottomBar,
-//       items: [
-//       // home
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.home),
-//         label: 'Home',
-//         ),
-//
-//       // workout
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.fitness_center),
-//         label: 'Workout',
-//         ),
-//
-//       // calendar
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.calendar_today),
-//         label: 'Calendar',
-//         ),
-//
-//       // profile
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.person),
-//         label: 'Profile',
-//         ),
-//       ],
-//     ),
-//   );
-// }
-//
   
   String _generateGreeting() {
     final hour = DateTime.now().hour;
@@ -132,59 +72,63 @@ class _NavigatorPageState extends State<NavigatorPage> {
     'Profile',
   ];
 
+Widget _buildSettingsButton(BuildContext context) {
+  return IconButton(
+    tooltip: 'Settings',
+    icon: const AppIcon(
+      materialIcon: Icons.settings,
+      svgPath: 'assets/icons/settings.svg',
+      useCustom: false,
+      color: Colors.white,
+    ),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const SettingsPage()),
+      );
+    },
+  );
+}
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    var scaffold = Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _titles[_selectedIndex],
-              style: const TextStyle(fontSize: 18),
-        ),
-        if (widget.name != null) // Only show greeting if name is passed
-          Text(
-            //'Welcome, ${widget.name}!',
-            _generateGreeting(),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-        ),
-       ],
-      ),
-        centerTitle: true,
+
+    actions: [
+      _buildSettingsButton(context),
+    ],
+
         backgroundColor: Colors.grey[700],
-        //     leading: Builder(
-        //       builder: (context) => IconButton(
-        //       icon: const AppIcon(
-        //         materialIcon: Icons.menu,
-        //         svgPath: 'assets/icons/menu.svg',
-        //         useCustom: false, //<---------------
-        //         color: Colors.white,
-        //       ),
-        //       onPressed: () {
-        //         //ScaffoldMessenger.of(context).showSnackBar(
-        //         //  const SnackBar(content: Text("Menu tapped")),
-        //         Scaffold.of(context).openDrawer();
-        //       },
-        //     ),
-        //   ),
-        actions: [
-          IconButton(
-            icon: const AppIcon(
-              materialIcon: Icons.settings,
-              svgPath: 'assets/icons/settings.svg',
-              useCustom:
-                  false, //<----Once you're ready to go full custom, just change to 'true'
-              color: Colors.white,
-            ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Settings tapped")),
-              );
-            },
-          )
-        ],
+        centerTitle: false, // Don't center greeting anymore
+        title: Row(
+          children: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                //if (widget.name != null) // Only show greeting if name is passed
+
+                child: Text(
+                  _generateGreeting(),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),       
       ),
+        
+
+
+      
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -197,12 +141,14 @@ class _NavigatorPageState extends State<NavigatorPage> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Home'),
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
               onTap: () {
-                Navigator.pop(context); // closes drawer
-                _navigateBottomBar(0);
-                //_onItemTapped(0);
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfilePage())
+                ); // closes drawer
               },
             ),
             ListTile(
@@ -221,14 +167,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                 _navigateBottomBar(2);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                _navigateBottomBar(3);
-              },
-            ),
+            
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -278,14 +217,14 @@ class _NavigatorPageState extends State<NavigatorPage> {
                }
               }
             ),
-            SwitchListTile(
-              secondary: const Icon(Icons.dark_mode),
-              title: const Text("Dark Mode"),
-              value: Provider.of<ThemeProvider>(context).isDarkMode,
-              onChanged: (value) =>
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleTheme(),
-            ),
+//            SwitchListTile(
+//              secondary: const Icon(Icons.dark_mode),
+//              title: const Text("Dark Mode"),
+//              value: Provider.of<ThemeProvider>(context).isDarkMode,
+//              onChanged: (value) =>
+//                  Provider.of<ThemeProvider>(context, listen: false)
+//                      .toggleTheme(),
+//            ),
           ],
         ),
       ),
@@ -304,6 +243,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
         ],
       ),
     );
+    return scaffold;
   }
 }
 

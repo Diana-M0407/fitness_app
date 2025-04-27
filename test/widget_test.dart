@@ -39,7 +39,7 @@ void main() {
     await tester.pumpWidget(
       ChangeNotifierProvider(
         create: (_) => ThemeProvider(),
-        child: const FitnessApp(isLoggedIn: false),
+        child: const FitnessApp(isLoggedIn: false, name: 'Esteban',),
       ),
     );
 
