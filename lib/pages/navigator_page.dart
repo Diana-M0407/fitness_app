@@ -1,3 +1,4 @@
+import 'package:fitnessapp/pages/login_page.dart';
 import 'package:fitnessapp/pages/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +23,14 @@ class NavigatorPage extends StatefulWidget {
 
 class _NavigatorPageState extends State<NavigatorPage> {
   int _selectedIndex = 0;
+  String? _currentName;
 
   void _navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  
+
   String _generateGreeting() {
     final hour = DateTime.now().hour;
     String greeting;
@@ -41,13 +43,12 @@ class _NavigatorPageState extends State<NavigatorPage> {
       greeting = 'Good evening';
     }
 
-      if (widget.name != null && widget.name!.isNotEmpty) {
-      return '$greeting, ${widget.name}!';
+    if (_currentName != null && _currentName!.isNotEmpty) {
+      return '$greeting, $_currentName!';
     } else {
       return '$greeting!';
     }
   }
-
 
   CupertinoSwitch newMethod(BuildContext context) {
     return CupertinoSwitch(
@@ -72,63 +73,61 @@ class _NavigatorPageState extends State<NavigatorPage> {
     'Profile',
   ];
 
-Widget _buildSettingsButton(BuildContext context) {
-  return IconButton(
-    tooltip: 'Settings',
-    icon: const AppIcon(
-      materialIcon: Icons.settings,
-      svgPath: 'assets/icons/settings.svg',
-      useCustom: false,
-      color: Colors.white,
-    ),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const SettingsPage()),
-      );
-    },
-  );
-}
+  Widget _buildSettingsButton(BuildContext context) {
+    return IconButton(
+      tooltip: 'Settings',
+      icon: const AppIcon(
+        materialIcon: Icons.settings,
+        svgPath: 'assets/icons/settings.svg',
+        useCustom: false,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SettingsPage()),
+        );
+      },
+    );
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    _currentName = widget.name;
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _refreshName();
+  }
 
+  Future<void> _refreshName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final updatedName = prefs.getString('displayName') ?? '';
+
+    if (_currentName != updatedName) {
+      setState(() {
+        _currentName = updatedName;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var scaffold = Scaffold(
       appBar: AppBar(
-
-    actions: [
-      _buildSettingsButton(context),
-    ],
-
+        actions: [
+          _buildSettingsButton(context),
+        ],
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.grey[700],
         centerTitle: false, // Don't center greeting anymore
-        title: Row(
-          children: [
-            Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                //if (widget.name != null) // Only show greeting if name is passed
-
-                child: Text(
-                  _generateGreeting(),
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
-          ),       
+        title: Text(_generateGreeting(),
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 18)),
       ),
-        
-
-
-      
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -146,9 +145,9 @@ Widget _buildSettingsButton(BuildContext context) {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfilePage())
-                ); // closes drawer
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ProfilePage())); // closes drawer
               },
             ),
             ListTile(
@@ -167,64 +166,62 @@ Widget _buildSettingsButton(BuildContext context) {
                 _navigateBottomBar(2);
               },
             ),
-            
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Log Out'),
-              onTap: () async {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => const Dialog(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                    child: Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 16),
-                          Text(
-                            "Logging you out...",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                leading: const Icon(Icons.logout),
+                title: const Text('Log Out'),
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => const Dialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      child: Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 16),
+                            Text(
+                              "Logging you out...",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
                       ),
-                     ),
                     ),
-                   );
+                  );
 
-              // Sign out
-              try {
-                await FirebaseAuth.instance.signOut();
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.setBool('isLoggedIn', false);
+                  // Sign out
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('isLoggedIn', false);
+                    await prefs.remove('displayName');
 
-                // Give spinner a short moment: bried pause for smoother UX 
-                await Future.delayed(const Duration(milliseconds: 500));
+                    // Give spinner a short moment: bried pause for smoother UX
+                    await Future.delayed(const Duration(milliseconds: 500));
 
-                if (context.mounted) {
-                  Navigator.of(context).pop(); // close spinner dialog
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              } catch (e) {
-                Navigator.of(context).pop(); // Remove spinner
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logout failed')),
-                );
-               }
-              }
-            ),
-//            SwitchListTile(
-//              secondary: const Icon(Icons.dark_mode),
-//              title: const Text("Dark Mode"),
-//              value: Provider.of<ThemeProvider>(context).isDarkMode,
-//              onChanged: (value) =>
-//                  Provider.of<ThemeProvider>(context, listen: false)
-//                      .toggleTheme(),
-//            ),
+                    if (context.mounted) {
+                      Navigator.of(context).pop(); // close spinner dialog
+                      //Navigator.pushReplacementNamed(context, '/');
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (route) => false,
+                      );
+                    }
+                  } catch (e) {
+                    Navigator.of(context).pop(); // Remove spinner
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Logout failed')),
+                    );
+                  }
+                }),
           ],
         ),
       ),
@@ -246,4 +243,3 @@ Widget _buildSettingsButton(BuildContext context) {
     return scaffold;
   }
 }
-

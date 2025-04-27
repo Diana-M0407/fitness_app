@@ -34,6 +34,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -81,9 +83,18 @@ class _ProfilePageState extends State<ProfilePage> {
         'weight', double.parse(_weightController.text.trim()));
 
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null && _emailController.text.trim() != user.email) {
+    if (user != null ){
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'displayName': _nameController.text.trim(),
+      'age': int.parse(_ageController.text.trim()),
+      'weight': double.parse(_weightController.text.trim()),
+      'email': _emailController.text.trim(),
+    });
+    
+    if (_emailController.text.trim() != user.email) {
       await user.updateEmail(_emailController.text.trim());
     }
+  }
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profile updated!')),
@@ -148,3 +159,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+

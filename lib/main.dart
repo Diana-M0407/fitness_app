@@ -5,6 +5,7 @@
 //import 'package:fitnessapp/pages/workout.dart';
 //import 'package:fitnessapp/pages/login_page.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitnessapp/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,17 +23,19 @@ import 'pages/login_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase setup
-  //newMethod();
 
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.getBool('isLoggedIn') ??
       false; // ← Change this later with real auth logic
-  final displayName = prefs.getString('displayName') ?? '';
+  final user = FirebaseAuth.instance.currentUser;
+  final bool finalIsLoggedIn = isLoggedIn && user != null;
+  final String displayName = prefs.getString('displayName') ?? '';
+
 
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
-      child: FitnessApp(isLoggedIn: isLoggedIn, name: displayName),
+      child: FitnessApp(isLoggedIn: finalIsLoggedIn, name: displayName),
     ),
   );
 }
@@ -63,9 +66,8 @@ class FitnessApp extends StatelessWidget {
       title: 'Fitness App',
       theme: themeProvider.themeData,
       //home: const NavigatorPage(),
-      home: isLoggedIn 
-        ? NavigatorPage(name: name) // pass the name here
-        : LoginPage(),
+      home: isLoggedIn
+          ? const NavigatorPage() : LoginPage(), // pass the name here
       routes: {
         '/navigator': (context) => NavigatorPage(name: name),
         '/home': (context) => const HomePage(),
