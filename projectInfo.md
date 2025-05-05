@@ -1,20 +1,21 @@
-##Workout App Submission
+# Workout App Submission
 
 Our submission for Computer Science CPSC-362, Section 08, Workout App Repository
 
-##Group Information
+## Group Information
 
-Alan Mai <alanmai3@csu.fullerton.edu > CWID: 885522565
-Kevin Quan <kquan8@csu.fullerton.edu > CWID: 861331916
-Diana Maldonado <di.maldonado5504@csu.fullerton.edu > CWID: 839805504
+Alan Mai <<alanmai3@csu.fullerton.edu> > CWID: 885522565
+Kevin Quan <<kquan8@csu.fullerton.edu> > CWID: 861331916
+Diana Maldonado <<di.maldonado5504@csu.fullerton.edu> > CWID: 839805504
 
-##Instructions
+### Instructions
 
 Using VSCode(Code Editor) + Android Studio(Mobile App Development/Compile) + Figma(Mobile App Design) + Trello (Task tracking: clipboard)
 
 No additional instructions.
 
-##Student Instrunctions
+#### Student Instrunctions
+
  flutter clean
  rm -rf build/
  flutter run
@@ -41,13 +42,15 @@ No additional instructions.
   sudo apt install gnome-themes-extra adwaita-icon-theme
  Remove or comment out these lines:
 
-# export DISPLAY=:0
+##### Student Instructions (Commands)
 
-# export LIBGL_ALWAYS_INDIRECT=1
+ export DISPLAY=:0
 
-# export WAYLAND_DISPLAY=wayland-0
+ export LIBGL_ALWAYS_INDIRECT=1
 
-# export XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+ export WAYLAND_DISPLAY=wayland-0
+
+ export XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
 
  Now run:
  sudo apt install gedit -y
@@ -88,7 +91,6 @@ And Android builds on Windows:
   flutter run -d emulator-5554
 <><><><>
 
-
 ***Power Shell***
 $& "C:\Users\dmald\AppData\Local\Android\Sdk\emulator\emulator.exe" -list-avds
 $emulator -list-avds
@@ -113,7 +115,7 @@ flutter emulators:
 flutter emulators
 flutter run -d emulator-5554
 To run an emulator, run:
-  #flutter emulators --launch <emulator id>
+  #flutter emulators --launch 'emulator id'
   #flutter emulators --launch Pixel_7
   & "C:\Users\dmald\AppData\Local\Android\Sdk\emulator\emulator.exe" -avd Pixel_7
 
@@ -122,8 +124,6 @@ Try:
   flutter run -d Pixel_7
   flutter run -d emulator-5554
   & "C:\Users\dmald\AppData\Local\Android\Sdk\emulator\emulator.exe" -avd Pixel_7
-
-
 
 ***Terminal Types***
 
