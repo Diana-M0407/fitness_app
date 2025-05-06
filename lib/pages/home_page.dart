@@ -1,5 +1,5 @@
 //import 'package:flutter/material.dart';
-  //import 'package:fitnessapp/widgets/app_icon.dart';
+//import 'package:fitnessapp/widgets/app_icon.dart';
 //
 //class HomePage extends StatelessWidget {
 //  const HomePage({super.key});
@@ -23,56 +23,54 @@
 //  }
 //}
 
-
 //  @override
 //  Widget build(BuildContext context) {
 //    return Scaffold(
 //    //  appBar: AppBar(
-    //    backgroundColor: Colors.grey[700],
-    //    centerTitle: true,
-    //    leading: IconButton(
-    //      icon: const AppIcon(
-    //        materialIcon: Icons.menu,
-    //        svgPath: 'assets/icons/menu.svg',
-    //        useCustom: false, // set to true later to use your custom svg
-    //        color: Colors.white,
-    //      ),
-    //      onPressed: () {
-    //        // example: open a drawer or show a message
-    //        ScaffoldMessenger.of(context).showSnackBar(
-    //          const SnackBar(content: Text("Menu clicked")),
-    //        );
-    //      },
-    //    ),
-    //    title: const Text(
-    //      'Home',
-    //      style: TextStyle(
-    //        color: Colors.black,
-    //        fontSize: 18,
-    //        fontWeight: FontWeight.bold,
-    //      ),
-    //    ),
-    //    actions: [
-    //      IconButton(
-    //        icon: const AppIcon(
-    //          materialIcon: Icons.settings,
-    //          svgPath: 'assets/icons/settings.svg',
-    //          useCustom: false,
-    //          color: Colors.white,
-    //        ),
-    //        onPressed: () {
-    //          // navigate to settings or perform action
-    //        },
-    //      ),
-    //    ],
-    //  ),
+//    backgroundColor: Colors.grey[700],
+//    centerTitle: true,
+//    leading: IconButton(
+//      icon: const AppIcon(
+//        materialIcon: Icons.menu,
+//        svgPath: 'assets/icons/menu.svg',
+//        useCustom: false, // set to true later to use your custom svg
+//        color: Colors.white,
+//      ),
+//      onPressed: () {
+//        // example: open a drawer or show a message
+//        ScaffoldMessenger.of(context).showSnackBar(
+//          const SnackBar(content: Text("Menu clicked")),
+//        );
+//      },
+//    ),
+//    title: const Text(
+//      'Home',
+//      style: TextStyle(
+//        color: Colors.black,
+//        fontSize: 18,
+//        fontWeight: FontWeight.bold,
+//      ),
+//    ),
+//    actions: [
+//      IconButton(
+//        icon: const AppIcon(
+//          materialIcon: Icons.settings,
+//          svgPath: 'assets/icons/settings.svg',
+//          useCustom: false,
+//          color: Colors.white,
+//        ),
+//        onPressed: () {
+//          // navigate to settings or perform action
+//        },
+//      ),
+//    ],
+//  ),
 //    body: Center(
 //      child: Text('Home Page Content'),
 //    ),
 //    );
 //  }
 //}
-
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,38 +85,59 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _goalController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _goalController = TextEditingController();
+  final _disabilityController = TextEditingController();
   String _gender = 'Male';
-  final TextEditingController _disabilityController = TextEditingController();
 
   @override
-  void dispose() {
-    _weightController.dispose();
-    _goalController.dispose();
-    _disabilityController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadProfile();
   }
 
-  Future<void> _saveProfile() async {
-    if (_formKey.currentState!.validate()) {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({
-          'currentWeight': double.parse(_weightController.text),
-          'weightGoal': double.parse(_goalController.text),
-          'gender': _gender,
-          'disability': _disabilityController.text,
-        }, SetOptions(merge: true));
+  Future<void> _loadProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile saved!')),
-        );
-      }
+    // Pull any existing fields from Firestore
+    final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
+
+    if (doc.exists) {
+      final data = doc.data()!;
+      _weightController.text     = data['currentWeight']?.toString() ?? '';
+      _goalController.text       = data['weightGoal']?.toString()   ?? '';
+      _gender                    = data['gender']                   ?? _gender;
+      _disabilityController.text = data['disability']              ?? '';
     }
+
+    setState(() {}); // rebuild with the fetched values
+  }
+
+
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    //final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .set({
+        'currentWeight': double.parse(_weightController.text),
+        'weightGoal':    double.parse(_goalController.text),
+        'gender':        _gender,
+        'disability':    _disabilityController.text,
+      }, SetOptions(merge: true));  // ← preserves your email/password fields
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profile saved!')),
+    );
   }
 
   @override
