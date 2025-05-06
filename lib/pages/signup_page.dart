@@ -24,16 +24,23 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() => _loading = true);
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // Create account and capture the credential
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _email,
         password: _password,
       );
 
+      // Update the Firebase User's displayName
+      await credential.user!.updateDisplayName(_name);
+
+      // Persist everything locally
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('displayName', _name);
       await prefs.setInt('age', _age);
       await prefs.setDouble('weight', _weight);
+      await prefs.setString('email', _email);
 
       if (context.mounted) {
         Navigator.pushReplacement(
@@ -73,7 +80,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     final age = int.tryParse(value ?? '');
-                    return (age == null || age <= 0) ? 'Enter a valid age' : null;
+                    return (age == null || age <= 0)
+                        ? 'Enter a valid age'
+                        : null;
                   },
                   onSaved: (value) => _age = int.parse(value!),
                 ),
@@ -139,4 +148,3 @@ class NavigatorPageWithGreeting extends StatelessWidget {
     return const NavigatorPage();
   }
 }
-
