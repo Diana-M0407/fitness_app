@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fitnessapp/theme/theme_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
 
-
+class _SettingsPageState extends State<SettingsPage> {
+  String? _name;
+  @override
+  void initState() {
+    super.initState();
+    _loadName();
+  }
+  Future<void> _loadName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _name = prefs.getString('displayName') ?? 'User';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        //title: const Text('Settings'),
+        title: Text('Settings - ${_name ?? ""}'),
         backgroundColor: Colors.grey[700],
       ),
       body: ListView(
@@ -31,7 +48,6 @@ class SettingsPage extends StatelessWidget {
                     .toggleTheme(),
           ),
           const Divider(height: 48),
-
           const Text(
             'App Info',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -65,5 +81,3 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
-
