@@ -115,18 +115,12 @@ class _LoginPageState extends State<LoginPage> {
 
       final displayName = prefs.getString('displayName') ?? 'User'; // fetch saved name
 
-      if (context.mounted) {
+      if (!mounted) return; 
+        // Navigate to the main page on successful login
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => NavigatorPage(name: displayName)),
         );
-      }
-      
-      // Navigate to the main page on successful login
-      Navigator.pushReplacement(
-        context, 
-        MaterialPageRoute(builder: (_) => const NavigatorPage()),
-      );
     } on FirebaseAuthException catch (e) {
       setState(() {
         _error = e.message ?? 'Login failed';
