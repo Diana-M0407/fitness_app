@@ -66,12 +66,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
     const ProfilePage(),
   ];
 
-  final List<String> _titles = [
-    'Home',
-    'Workout',
-    'Calendar',
-    'Profile',
-  ];
 
   Widget _buildSettingsButton(BuildContext context) {
     return IconButton(

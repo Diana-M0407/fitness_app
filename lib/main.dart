@@ -17,7 +17,6 @@ import 'pages/navigator_page.dart';
 import 'pages/home_page.dart';
 import 'pages/workout.dart';
 import 'pages/calendar_page.dart';
-import 'pages/profile_page.dart';
 import 'pages/login_page.dart';
 
 void main() async {
@@ -73,7 +72,8 @@ class FitnessApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/workout': (context) => const WorkoutPage(),
         '/calendar': (context) => const CalendarPage(),
-        '/profile': (context) => const ProfilePage(),
+        //'/profile': (context) => const ProfilePage(),
+        '/profile': (context) => HomePage(),
       },
     );
   }
