@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color.fromARGB(255, 167, 20, 20),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -147,8 +147,8 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Login", style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: 24),
+                  Text("Hello! Are you ready to workout?", style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: 90),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Email'),
                     keyboardType: TextInputType.emailAddress,
@@ -178,8 +178,13 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(context, 
                           MaterialPageRoute(builder: (_) => const SignUpPage())
                           );
+                          ElevatedButton(
+                      onPressed: _login,
+                      child: const Text('Sing Up'),
+                    );
+
                     },
-                    child: const Text("Don't have an account? Sign up"),
+                    child: Text( selectionColor:  Color(0x00000005), "Don't have an account? Sign up",),
                     ),
                     TextButton(
                       onPressed: () {
