@@ -1,5 +1,4 @@
 import 'package:fitnessapp/pages/login_page.dart';
-//import 'package:fitnessapp/pages/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/pages/workout_page.dart';
@@ -98,21 +97,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
     );
   }
 
-  // Future<void> _loadName() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _currentName = prefs.getString('displayName') ?? widget.name ?? '';
-  //   });
-  //      final updatedName = prefs.getString('displayName') ?? '';
-  //
-  //      if (_currentName != updatedName) {
-  //        setState(() {
-  //          _currentName = updatedName;
-  //        });
-  //      }
-  // }
-//
-
   Future<void> _loadName() async {
     final prefs = await SharedPreferences.getInstance();
     // 1) try the passed‐in name, 2) fall back to prefs, 3) finally empty
@@ -200,10 +184,6 @@ title: Text(
               onTap: () {
                 Navigator.pop(context);
                 _navigateBottomBar(3);
-                //Navigator.push(
-                //    context,
-                //    MaterialPageRoute(
-                //        builder: (_) => const ProfilePage())); // closes drawer
               },
             ),
             // 4) Re-add your Settings item in the drawer:
@@ -292,6 +272,5 @@ title: Text(
         ],
       ),
     );
-    //return scaffold;
   }
 }

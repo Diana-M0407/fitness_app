@@ -1,73 +1,3 @@
-//import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:flutter/material.dart';
-//import 'package:fitnessapp/pages/navigator_page.dart';
-//
-//class LoginPage extends StatefulWidget {
-//  const LoginPage({super.key});
-//
-//  @override
-//  _LoginPageState createState() => _LoginPageState();
-//}
-//
-//class _LoginPageState extends State<LoginPage> {
-//  final _formKey = GlobalKey<FormState>();
-//  String _email = '';
-//  String _password = '';
-//
-//  void _submitForm() {
-//    if (_formKey.currentState!.validate()) {
-//      _formKey.currentState!.save();
-//      // TODO: Implement authentication logic here
-//      print('Email: $_email, Password: $_password');
-//    }
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      backgroundColor: Colors.grey[100],
-//      body: Center(
-//        child: Padding(
-//          padding: const EdgeInsets.all(24.0),
-//          child: Form(
-//            key: _formKey,
-//            child: Column(
-//              mainAxisSize: MainAxisSize.min,
-//              children: [
-//                Text("Login", style: Theme.of(context).textTheme.headlineMedium),
-//                const SizedBox(height: 24),
-//                TextFormField(
-//                  decoration: const InputDecoration(labelText: 'Email'),
-//                  keyboardType: TextInputType.emailAddress,
-//                  validator: (value) =>
-//                      value!.isEmpty ? 'Please enter your email' : null,
-//                  onSaved: (value) => _email = value!,
-//                ),
-//                const SizedBox(height: 16),
-//                TextFormField(
-//                  decoration: const InputDecoration(labelText: 'Password'),
-//                  obscureText: true,
-//                  validator: (value) =>
-//                      value!.isEmpty ? 'Please enter your password' : null,
-//                  onSaved: (value) => _password = value!,
-//                ),
-//                const SizedBox(height: 32),
-//                ElevatedButton(
-//                  onPressed: _submitForm,
-//                  child: const Text('Login'),
-//                ),
-//              ],
-//            ),
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}
-
-
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/pages/navigator_page.dart';
@@ -242,12 +172,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
   
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
