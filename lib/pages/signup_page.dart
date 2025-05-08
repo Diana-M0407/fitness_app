@@ -43,11 +43,10 @@ class _SignUpPageState extends State<SignUpPage> {
       await prefs.setString('email', _email);
 
       if (context.mounted) {
-        Navigator.pushReplacement(
+        Navigator.pushReplacementNamed(
           context,
-          MaterialPageRoute(
-            builder: (_) => NavigatorPage(name: _name),
-          ),
+          '/navigator',
+          arguments: _name,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -122,7 +121,7 @@ if (_error.isNotEmpty) ...[
   const SizedBox(height: 12),
 ],
 
-if (_isLoading) 
+if (_loading) 
   const CircularProgressIndicator()
 else 
   ElevatedButton(
@@ -133,27 +132,11 @@ else
 const SizedBox(height: 12),
 
 // Cancel as a read-only TextFormField
-TextFormField(
-  initialValue: 'Cancel',
-  readOnly: true,
-  style: const TextStyle(color: Colors.white),
-  decoration: const InputDecoration(
-    labelText: 'Cancel',
-    labelStyle: TextStyle(color: Colors.white70),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Colors.white54),
-    ),
-  ),
-  onTap: () {
-    Navigator.pop(context);
-  },
+TextButton(
+  onPressed: () => Navigator.pop(context),
+  child: const Text('Cancel'),
 ),
 
-
-  onTap: () {
-    Navigator.pop(context); // close the login pop-up and return
-  },
-),
               ],
             ),
           ),
