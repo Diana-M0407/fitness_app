@@ -1,7 +1,6 @@
 //import 'package:fitnessapp/pages/calendar.dart';
 //import 'package:fitnessapp/pages/home.dart';
 //import 'package:fitnessapp/pages/navigator_page.dart';
-//import 'package:fitnessapp/pages/profile.dart';
 //import 'package:fitnessapp/pages/workout.dart';
 //import 'package:fitnessapp/pages/login_page.dart';
 
@@ -13,11 +12,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 //import 'theme/theme_provider.dart';
-import 'pages/navigator_page.dart';
+import 'package:fitnessapp/pages/navigator_page.dart';
 import 'pages/home_page.dart';
-import 'pages/workout.dart';
+import 'pages/workout_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/login_page.dart';
+import 'package:fitnessapp/pages/profile_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,14 +67,14 @@ class FitnessApp extends StatelessWidget {
       theme: themeProvider.themeData,
       //home: const NavigatorPage(),
       home: isLoggedIn
-          ? const NavigatorPage() : LoginPage(), // pass the name here
+          ? NavigatorPage(name: name) : LoginPage(), // pass the name here
       routes: {
-        '/navigator': (context) => NavigatorPage(name: name),
-        '/home': (context) => const HomePage(),
+        '/navigator': (context) => NavigatorPage(),
+        '/home': (context) => HomePage(),
         '/workout': (context) => const WorkoutPage(),
         '/calendar': (context) => const CalendarPage(),
-        //'/profile': (context) => const ProfilePage(),
-        '/profile': (context) => HomePage(),
+        '/profile': (context) => const ProfilePage(),
+        //'/profile': (context) => HomePage(),
       },
     );
   }
