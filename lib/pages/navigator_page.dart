@@ -1,8 +1,8 @@
 import 'package:fitnessapp/pages/login_page.dart';
-import 'package:fitnessapp/pages/settings_page.dart';
+//import 'package:fitnessapp/pages/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fitnessapp/pages/workout.dart';
+import 'package:fitnessapp/pages/workout_page.dart';
 import 'package:fitnessapp/pages/calendar_page.dart';
 import 'package:fitnessapp/pages/profile_page.dart';
 import 'package:fitnessapp/pages/home_page.dart';
@@ -12,6 +12,7 @@ import 'package:fitnessapp/widgets/app_icon.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'settings_page.dart';
 
 class NavigatorPage extends StatefulWidget {
   final String? name; //Nullable to avoid issues when coming from login
@@ -23,11 +24,24 @@ class NavigatorPage extends StatefulWidget {
 
 class _NavigatorPageState extends State<NavigatorPage> {
   int _selectedIndex = 0;
-  String? _currentName;
+  String _currentName = '';
 
   void _navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final name = ModalRoute.of(context)!.settings.arguments as String?;
+      if (name != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Welcome, $name! Ready to work out?')),
+        );
+      }
     });
   }
 
@@ -43,7 +57,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
       greeting = 'Good evening';
     }
 
-    if (_currentName != null && _currentName!.isNotEmpty) {
+    if (_currentName.isNotEmpty) {
       return '$greeting, $_currentName!';
     } else {
       return '$greeting!';
@@ -60,12 +74,11 @@ class _NavigatorPageState extends State<NavigatorPage> {
   }
 
   final List<Widget> _pages = [
-    const HomePage(),
+    HomePage(),
     const WorkoutPage(),
     const CalendarPage(),
     const ProfilePage(),
   ];
-
 
   Widget _buildSettingsButton(BuildContext context) {
     return IconButton(
@@ -85,63 +98,84 @@ class _NavigatorPageState extends State<NavigatorPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _currentName = widget.name;
-  }
+  // Future<void> _loadName() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _currentName = prefs.getString('displayName') ?? widget.name ?? '';
+  //   });
+  //      final updatedName = prefs.getString('displayName') ?? '';
+  //
+  //      if (_currentName != updatedName) {
+  //        setState(() {
+  //          _currentName = updatedName;
+  //        });
+  //      }
+  // }
+//
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _refreshName();
-  }
-
-  Future<void> _refreshName() async {
+  Future<void> _loadName() async {
     final prefs = await SharedPreferences.getInstance();
-    final updatedName = prefs.getString('displayName') ?? '';
-
-    if (_currentName != updatedName) {
-      setState(() {
-        _currentName = updatedName;
-      });
-    }
+    // 1) try the passed‐in name, 2) fall back to prefs, 3) finally empty
+    final fromParam = widget.name ?? '';
+    final fromPrefs = prefs.getString('displayName') ?? '';
+    setState(() {
+      _currentName = fromParam.isNotEmpty ? fromParam : fromPrefs;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var scaffold = Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        actions: [
-          _buildSettingsButton(context),
-        ],
+        //    actions: [
+        //      _buildSettingsButton(context),
+        //    ],
         automaticallyImplyLeading: true,
-        backgroundColor: Colors.grey[700],
+        backgroundColor: const Color(0xFFA71414),
         centerTitle: false, // Don't center greeting anymore
-        title: Text(_generateGreeting(),
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 18)),
+title: Text(
+  _generateGreeting(),
+  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: const Color.fromARGB(179, 45, 4, 60),
+  ),
+),
+
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SettingsPage()),
+            ),
+          )
+        ],
+        //overflow: TextOverflow.ellipsis,
+        //style: const TextStyle(fontSize: 18)),
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.zero,
+          //padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.grey),
+              decoration: BoxDecoration(color: Color(0xFFA71414)),
               child: Text(
                 'Menu',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+                style: TextStyle(fontSize: 45, color: Colors.black),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const ProfilePage())); // closes drawer
+                _navigateBottomBar(0);
+                //Navigator.push(
+                //    context,
+                //    MaterialPageRoute(
+                //        builder: (_) => const HomePage())); // closes drawer
               },
             ),
             ListTile(
@@ -158,6 +192,30 @@ class _NavigatorPageState extends State<NavigatorPage> {
               onTap: () {
                 Navigator.pop(context);
                 _navigateBottomBar(2);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                _navigateBottomBar(3);
+                //Navigator.push(
+                //    context,
+                //    MaterialPageRoute(
+                //        builder: (_) => const ProfilePage())); // closes drawer
+              },
+            ),
+            // 4) Re-add your Settings item in the drawer:
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsPage()),
+                );
               },
             ),
             const Divider(),
@@ -234,6 +292,6 @@ class _NavigatorPageState extends State<NavigatorPage> {
         ],
       ),
     );
-    return scaffold;
+    //return scaffold;
   }
 }
