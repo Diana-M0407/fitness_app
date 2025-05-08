@@ -115,16 +115,45 @@ class _SignUpPageState extends State<SignUpPage> {
                       : null,
                   onSaved: (value) => _password = value!.trim(),
                 ),
-                const SizedBox(height: 24),
-                if (_error.isNotEmpty)
-                  Text(_error, style: const TextStyle(color: Colors.red)),
-                if (_loading)
-                  const CircularProgressIndicator()
-                else
-                  ElevatedButton(
-                    onPressed: _signUp,
-                    child: const Text('Create Account'),
-                  ),
+const SizedBox(height: 24),
+
+if (_error.isNotEmpty) ...[
+  Text(_error, style: const TextStyle(color: Colors.red)),
+  const SizedBox(height: 12),
+],
+
+if (_isLoading) 
+  const CircularProgressIndicator()
+else 
+  ElevatedButton(
+    onPressed: _signUp,   
+    child: const Text('Create Account'),
+  ),
+
+const SizedBox(height: 12),
+
+// Cancel as a read-only TextFormField
+TextFormField(
+  initialValue: 'Cancel',
+  readOnly: true,
+  style: const TextStyle(color: Colors.white),
+  decoration: const InputDecoration(
+    labelText: 'Cancel',
+    labelStyle: TextStyle(color: Colors.white70),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.white54),
+    ),
+  ),
+  onTap: () {
+    Navigator.pop(context);
+  },
+),
+
+
+  onTap: () {
+    Navigator.pop(context); // close the login pop-up and return
+  },
+),
               ],
             ),
           ),
