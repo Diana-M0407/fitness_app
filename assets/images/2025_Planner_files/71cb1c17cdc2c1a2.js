@@ -1,0 +1,11 @@
+(self["webpackChunk_canva_web"] = self["webpackChunk_canva_web"] || []).push([[99726],{
+
+/***/ 437917:
+function(_, __, __webpack_require__) {__webpack_require__.n_x = __webpack_require__.n;const __web_req__ = __webpack_require__;__web_req__(813110);__web_req__(59401);self._5880d4398c473aa67256e87589eaef11 = self._5880d4398c473aa67256e87589eaef11 || {};(function(__c) {var fDb,gDb;fDb=function({base:a,query:b,dB:c,bDb:d,Ax:e,mec:f,y4:g,j4:h}){d=d===!1?k=>k:__c.$ua;a=b!=null&&c!=null?__c.Eg(__c.Cg(`${a}`),c,d(b)):b!=null?__c.Cg(`${a}${encodeURIComponent(d(b))}/`):__c.Cg(`${a}`);g&&__c.Eg(a,"skipAutocorrect",g);return __c.Fg(__c.Eg(__c.Eg(__c.zg(a,f),"ancestorBranches",e),"searchLanguageOverride",h))};gDb=function(a){a=new __c.Bk({token:a});return btoa(JSON.stringify(__c.Ck.serialize(a)))};
+__c.hDb=function(a,{avd:b,dvd:c,params:d,y4:e,j4:f}){if(c.baseUrl==null||c.dA==null)throw Error("baseUrl and searchToken must exist in SearchTab proto to baseNavigateToSearch");var g;const h=(g=d.query)!==null&&g!==void 0?g:b.query;var k,l;b=[];(g=(l=d.Bsa)===null||l===void 0?void 0:l.$pd)&&b.push(gDb(g));(l=(k=d.ppb)===null||k===void 0?void 0:k.r6c)&&b.push(gDb(l));d.Tv&&(b=b.concat(d.Tv));k=b;var n,p;l={};var q;const {key:u,value:w}=(q=(n=d.Bsa)===null||n===void 0?void 0:n.HTe)!==null&&q!==void 0?
+q:{};__c.rua(u)&&(l[u]=w);var x;const {key:z,value:B}=(x=(p=d.ppb)===null||p===void 0?void 0:p.o6c)!==null&&x!==void 0?x:{};__c.rua(z)&&(l[z]=B);n=fDb({base:c.baseUrl,query:h,dB:c.dB,bDb:c.bDb,Ax:d.Ax,mec:{...l,...d.mec},y4:e,j4:f});var C;c=!(c.baseUrl==="/templates/"&&c.dB&&h&&a.S6)||d.T7&&!a.Udb||d.Tv&&!a.Tdb?__c.$e(n,{type:"search-token",token:c.dA,zf:h,Ax:d.Ax,Tv:k,Fc:(C=d.Fc)!==null&&C!==void 0?C:5,epa:d.epa,T7:d.T7,y4:e,j4:f}):__c.af(n);d=(0,__c.DFa)(n,c.state);a.history.push(d)};
+__c.iDb=function(a,b){var c,d,e;const f=!!((d=a.rC)===null||d===void 0?0:(c=d.sources)===null||c===void 0?0:c.length)||!((e=a.rC)===null||e===void 0||!e.loading);return{...b,T7:f}};__c.dt=function(a){return a.width===-1&&a.height===-1&&a.units===4};__c.jDb=function(a,b){const c=[],d=[];let e=0;for(const f of a)b(f,e)?c.push(f):d.push(f),e++;return[c,d]};
+}).call(self, self._5880d4398c473aa67256e87589eaef11);}
+
+}])
+//# sourceMappingURL=sourcemaps/71cb1c17cdc2c1a2.js.map
