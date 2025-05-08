@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: Color(0xFFA71414),
+                        foregroundColor: const Color.fromARGB(255, 89, 44, 157),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       onPressed: isLoading
@@ -219,17 +219,18 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: Color(0xFFA71414),
+                        foregroundColor: const Color.fromARGB(255, 89, 44, 157),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // close sheet
-                        Navigator.push(
-                          context,
+                        Navigator.of(context).pop; // close sheet
+                        Navigator.of(context).push(
+                          //context,
                           MaterialPageRoute(
-                              builder: (_) => const SignUpPage()),
+                              builder: (_) => const SignUpPage())                     
                         );
                       },
+                      //onPressed: _showLoginSheet, // <- call the bottom-sheet
                       child: const Text('Sign Up'),
                     ),
                   ],
@@ -241,6 +242,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Hello! Are you ready to workout?",
+                    "Hello!\n\n\nAre you ready to workout?",
                     style: Theme.of(context)
                         .textTheme
                         .headlineLarge
