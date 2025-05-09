@@ -18,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _loadName();
   }
+
   Future<void> _loadName() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -37,31 +38,40 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(24),
         children: [
           // add at the top of your ListView children:
-const Text('Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-const SizedBox(height: 16),
-TextFormField(
-  initialValue: _name,
-  decoration: const InputDecoration(labelText: 'Display Name'),
-  onChanged: (v) => _name = v,
-),
-const SizedBox(height: 8),
-ElevatedButton(
-  onPressed: () async {
-    final prefs = await SharedPreferences.getInstance();
-    await FirebaseFirestore.instance
-  .collection('users')
-  .doc(FirebaseAuth.instance.currentUser!.uid)
-  .set({'displayName': _name}, SetOptions(merge: true));
+          const Text('Profile',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          TextFormField(
+            initialValue: _name,
+            decoration: const InputDecoration(labelText: 'Display Name'),
+            onChanged: (v) => _name = v,
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: () async {
+              // save to firestore
+              final prefs = await SharedPreferences.getInstance();
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .set({'displayName': _name}, SetOptions(merge: true));
 
-    await prefs.setString('displayName', _name ?? 'User');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Name updated!')),
-    );
-    setState(() {}); // refresh title
-  },
-  child: const Text('Save Name'),
-),
-const Divider(height: 48),
+              // save locally
+              await prefs.setString('displayName', _name ?? 'User');
+
+              // tell FirebaseAuth
+              await FirebaseAuth.instance.currentUser!.updateDisplayName(_name);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Name updated!')),
+              );
+              // pop back, returning the new name
+              Navigator.of(context).pop(_name);
+              //setState(() {}); // refresh title
+            },
+            child: const Text('Save Name'),
+          ),
+          const Divider(height: 48),
 
           const Text(
             'Appearance',
@@ -110,4 +120,3 @@ const Divider(height: 48),
     );
   }
 }
-

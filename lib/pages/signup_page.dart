@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _name = '', _email = '', _password = '', _error = '';
   int _age = 0;
   double _weight = 0.0;
+  //double _currentWeight = 0.0;
   bool _loading = false;
 
   Future<void> _signUp() async {
@@ -25,11 +27,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
     try {
       // Create account and capture the credential
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
+      final credential = 
+        await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: _email, password: _password);
 
       // Update the Firebase User's displayName
       await credential.user!.updateDisplayName(_name);
@@ -40,21 +40,79 @@ class _SignUpPageState extends State<SignUpPage> {
       await prefs.setString('displayName', _name);
       await prefs.setInt('age', _age);
       await prefs.setDouble('weight', _weight);
-      await prefs.setString('email', _email);
+      //await prefs.setString('email', _email);
+      //await prefs.setDouble('Current weight', _weight);
 
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(
+      final uid = credential.user!.uid;
+      await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({
+          'currentWeight': _weight,
+          'weightGoal': 0.0,
+          'gender': 'Male',
+          'disability': '',
+        }, SetOptions(merge: true));
+
+ /*     if (context.mounted) {
+      /*  Navigator.pushReplacementNamed(
           context,
           '/navigator',
           arguments: _name,
-        );
-      }
-    } on FirebaseAuthException catch (e) {
+        );      */
+        Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => NavigatorPage(name: _name),
+        ),
+      );
+    }   */
+  } 
+
+
+
+      /*
+      on FirebaseAuthException catch (e) {
       setState(() => _error = e.message ?? 'Sign-up failed');
-    } finally {
-      setState(() => _loading = false);
+      } finally {
+      if (mounted) {
+        setState(() => _loading = false);
+        }
+      }
+      */
+
+on FirebaseAuthException catch (e) {
+    setState(() {
+      _error = e.message ?? 'Sign-up failed';
+    });
+    return;              // skip navigation if auth error
+  } catch (e) {
+    setState(() {
+      _error = 'Unexpected error: $e';
+    });
+    return;
+  } finally {
+    if (mounted) setState(() => _loading = false);
     }
-  }
+
+  // only get here if everything succeeded
+  if (!mounted) return;
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (_) => NavigatorPage(name: _name)),
+  );
+
+
+
+
+
+
+}
+
+  
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,29 +172,28 @@ class _SignUpPageState extends State<SignUpPage> {
                       : null,
                   onSaved: (value) => _password = value!.trim(),
                 ),
-const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-if (_error.isNotEmpty) ...[
-  Text(_error, style: const TextStyle(color: Colors.red)),
-  const SizedBox(height: 12),
-],
+                if (_error.isNotEmpty) ...[
+                  Text(_error, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 12),
+                ],
 
-if (_loading) 
-  const CircularProgressIndicator()
-else 
-  ElevatedButton(
-    onPressed: _signUp,   
-    child: const Text('Create Account'),
-  ),
+                if (_loading)
+                  const CircularProgressIndicator()
+                else
+                  ElevatedButton(
+                    onPressed: _signUp,
+                    child: const Text('Create Account'),
+                  ),
 
-const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-// Cancel as a read-only TextFormField
-TextButton(
-  onPressed: () => Navigator.pop(context),
-  child: const Text('Cancel'),
-),
-
+                // Cancel as a read-only TextFormField
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
               ],
             ),
           ),

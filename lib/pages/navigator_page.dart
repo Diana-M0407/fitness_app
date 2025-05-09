@@ -34,6 +34,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
   @override
   void initState() {
     super.initState();
+    _loadName();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final name = ModalRoute.of(context)!.settings.arguments as String?;
       if (name != null) {
@@ -111,23 +112,19 @@ class _NavigatorPageState extends State<NavigatorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //    actions: [
-        //      _buildSettingsButton(context),
-        //    ],
         automaticallyImplyLeading: true,
         backgroundColor: const Color(0xFFA71414),
         centerTitle: false, // Don't center greeting anymore
-title: Text(
-  _generateGreeting(),
-  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-    fontSize: 15,
-    fontWeight: FontWeight.w600,
-    color: const Color.fromARGB(179, 45, 4, 60),
-  ),
-),
-
-
+        title: Text(
+          _generateGreeting(),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(179, 45, 4, 60),
+              ),
+        ),
         actions: [
+         // _buildSettingsButton(context),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(

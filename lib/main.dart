@@ -33,17 +33,6 @@ void main() async {
   );
 }
 
-//void newMethod() {
-//  return runApp(
-//    ChangeNotifierProvider(
-//      //create: (context) => ThemeProvider(),
-//      create: (_) => ThemeProvider(),
-//      //child: const MyApp(),
-//      child: FitnessApp(isLoggenIn: null),
-//    ),
-//  );
-//}
-
 class FitnessApp extends StatelessWidget {
   final bool isLoggedIn;
   final String name;
@@ -58,7 +47,6 @@ class FitnessApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fitness App',
       theme: themeProvider.themeData,
-      //home: const NavigatorPage(),
       home: isLoggedIn
           ? NavigatorPage(name: name) : LoginPage(), // pass the name here
       routes: {
